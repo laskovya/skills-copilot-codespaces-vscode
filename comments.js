@@ -1,63 +1,64 @@
 // create web server
-// get comments from db
-// send comments to client
+// create a route (url) to accept incoming requests
+// create a route handler to accept incoming requests
+// read the data from the request
+// read the data from the file
+// write the data to the file
+// send a response back to the client
+// start the server and listen for incoming requests
 
-// import modules
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-
-// create express app
 const app = express();
 
-// connect to mongodb
-mongoose.connect('mongodb://localhost:27017/commentDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const COMMENTS_FILE = path.join(__dirname, 'comments.json');
 
-// create schema
-const commentSchema = new mongoose.Schema({
-    name: String,
-    comment: String
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.get('/api/comments', function(req, res) {
+  fs.readFile(COMMENTS_FILE, function(err, data) {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.json(JSON.parse(data));
+  });
 });
 
-// create model
-const Comment = mongoose.model('Comment', commentSchema);
+app.post('/api/comments', function(req, res) {
+  fs.readFile(COMMENTS_FILE, function(err, data) {
+    const comments = JSON.parse(data);
+    const newComment = {
+      id: Date.now(),// create a route (url) to accept incoming requests
+// create a route handler to accept incoming requests
+// read the data from the request
+// read the data from the file
+// write the data to the file
+// send a response back to the client
+// start the server and listen for incoming requests
 
-// set view engine
-app.set('view engine', 'ejs');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
+const app = express();
 
-// use body-parser
-app.use(bodyParser.urlencoded({ extended: true }));
+const COMMENTS_FILE = path.join(__dirname, 'comments.json');
 
-// set static folder
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-// get comments from db
-app.get('/', (req, res) => {
-    Comment.find({}, (err, comments) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('index', { comments: comments });
-        }
-    })
+app.get('/api/comments', function(req, res) {
+  fs.readFile(COMMENTS_FILE, function(err, data) {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.json(JSON.parse(data));
+  });
 });
 
-// post comments to db
-app.post('/', (req, res) => {
-    const comment = new Comment({
-        name: req.body.name,
-        comment: req.body.comment
-    });
-    comment.save((err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.redirect('/');
-        }
-    });
-});
-
-// listen on port 3000
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
-});
+app.post('/api/comments', function(req, res) {
+  fs.readFile(COMMENTS_FILE, function(err, data) {
+    const comments = JSON.parse(data);
+    const newComment = {
+      id: Date.now(),}
